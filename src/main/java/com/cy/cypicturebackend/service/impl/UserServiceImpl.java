@@ -3,6 +3,7 @@ package com.cy.cypicturebackend.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cy.cypicturebackend.constant.UserConstant;
 import com.cy.cypicturebackend.exception.BusinessException;
 import com.cy.cypicturebackend.exception.ErrorCode;
 import com.cy.cypicturebackend.model.entity.User;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
-import static com.cy.cypicturebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * @author 陈阳
@@ -98,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         //3.记录用户登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
 
         return this.getLoginUserVO(user);
     }
@@ -117,6 +116,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        //判断用户是否登录
+        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+
+        //从数据库查询（如果不追求性能，建议不要直接用缓存）
+        currentUser = this.getById(currentUser.getId());
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
     }
 
 }
