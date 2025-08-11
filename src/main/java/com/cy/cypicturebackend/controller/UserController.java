@@ -29,7 +29,7 @@ public class UserController {
      * @param userRegisterRequest 用户注册请求类
      * @return 新用户主键
      */
-    @PostMapping("/userRegister")
+    @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userRegisterRequest.getUserAccount();
@@ -46,6 +46,7 @@ public class UserController {
      * @param request          请求
      * @return 脱敏后的用户信息
      */
+    @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
