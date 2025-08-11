@@ -7,16 +7,24 @@ import com.cy.cypicturebackend.exception.BusinessException;
 import com.cy.cypicturebackend.exception.ErrorCode;
 import com.cy.cypicturebackend.model.entity.User;
 import com.cy.cypicturebackend.model.enums.UserRoleEnum;
+import com.cy.cypicturebackend.model.vo.LoginUserVO;
 import com.cy.cypicturebackend.service.UserService;
 import com.cy.cypicturebackend.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.cy.cypicturebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * @author 陈阳
  * @description 针对表【user(用户)】的数据库操作Service实现
  * @createDate 2025-08-08 13:18:26
  */
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
@@ -65,10 +73,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+
+        //1.参数校验
+        if (StrUtil.hasBlank(userAccount, userPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        if (userAccount.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号过短");
+        }
+        if (userPassword.length() < 8) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码过短");
+        }
+
+        //2.查询用户
+        String encryptPassword = getEncryptPassword(userPassword);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = this.baseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            log.info("user login failed,userAccount cannot match userPassword");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+        }
+
+        //3.记录用户登录态
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+
+        return this.getLoginUserVO(user);
+    }
+
+    @Override
     public String getEncryptPassword(String userPassword) {
         final String SALT = "dachen";
         return DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
     }
+
+    @Override
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
+    }
+
 }
 
 
