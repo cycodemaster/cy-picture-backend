@@ -1,10 +1,14 @@
 package com.cy.cypicturebackend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cy.cypicturebackend.model.dto.user.UserQueryRequest;
 import com.cy.cypicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cy.cypicturebackend.model.vo.LoginUserVO;
+import com.cy.cypicturebackend.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author 陈阳
@@ -42,12 +46,28 @@ public interface UserService extends IService<User> {
     String getEncryptPassword(String userPassword);
 
     /**
-     * 获取脱敏用户信息
+     * 获取脱敏后的登录用户信息
      *
      * @param user 用户
-     * @return 脱敏后用户
+     * @return 脱敏后的登录用户
      */
     LoginUserVO getLoginUserVO(User user);
+
+    /**
+     * 获取脱敏后的用户信息
+     *
+     * @param user 用户
+     * @return 脱敏后的用户
+     */
+    UserVO getUserVO(User user);
+
+    /**
+     * 获取脱敏后的用户列表
+     *
+     * @param userList 用户列表
+     * @return 脱敏后的用户列表
+     */
+    List<UserVO> getUserVOList(List<User> userList);
 
     /**
      * 获取当前登录用户
@@ -62,5 +82,13 @@ public interface UserService extends IService<User> {
      * @return 注销结果
      */
     boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 构造查询用户请求条件
+     *
+     * @param userQueryRequest 查询用户请求
+     * @return 查询用户请求条件
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
 }

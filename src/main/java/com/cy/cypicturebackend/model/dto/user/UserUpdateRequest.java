@@ -1,17 +1,16 @@
-package com.cy.cypicturebackend.model.vo;
+package com.cy.cypicturebackend.model.dto.user;
 
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 脱敏后的登录用户
+ * 更新用户请求
  */
 @Data
-public class LoginUserVO implements Serializable {
+public class UserUpdateRequest implements Serializable {
 
-    private static final long serialVersionUID = -912140099054157032L;
+    private static final long serialVersionUID = -2556491939299583489L;
 
     /**
      * id
@@ -22,6 +21,7 @@ public class LoginUserVO implements Serializable {
      * 账号
      */
     private String userAccount;
+
 
     /**
      * 用户昵称
@@ -42,20 +42,5 @@ public class LoginUserVO implements Serializable {
      * 用户角色：user/admin
      */
     private String userRole;
-
-    /**
-     * 编辑时间
-     */
-    private Date editTime;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
 }

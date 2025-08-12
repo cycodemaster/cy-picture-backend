@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 脱敏后的登录用户
+ * 脱敏后的用户信息
  */
 @Data
-public class LoginUserVO implements Serializable {
+public class UserVO implements Serializable {
 
-    private static final long serialVersionUID = -912140099054157032L;
+    private static final long serialVersionUID = 4204993657715057090L;
 
     /**
      * id
@@ -22,6 +22,7 @@ public class LoginUserVO implements Serializable {
      * 账号
      */
     private String userAccount;
+
 
     /**
      * 用户昵称
@@ -44,18 +45,8 @@ public class LoginUserVO implements Serializable {
     private String userRole;
 
     /**
-     * 编辑时间
-     */
-    private Date editTime;
-
-    /**
      * 创建时间
      */
     private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
 }
