@@ -1,6 +1,5 @@
 package com.cy.cypicturebackend.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cy.cypicturebackend.annotation.AuthCheck;
 import com.cy.cypicturebackend.common.BaseResponse;
@@ -14,7 +13,6 @@ import com.cy.cypicturebackend.model.entity.User;
 import com.cy.cypicturebackend.model.vo.LoginUserVO;
 import com.cy.cypicturebackend.model.vo.UserVO;
 import com.cy.cypicturebackend.service.UserService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
